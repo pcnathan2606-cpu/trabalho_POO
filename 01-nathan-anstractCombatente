@@ -1,0 +1,30 @@
+public abstract class Combatente {
+    private String nome;
+    private int nivel;
+    private int pontosVida;
+
+    public Combatente(String nome, int nivel, int pontosVida){
+        this.nome = nome;
+        this.nivel = nivel;
+        this.pontosVida = pontosVida;
+    }
+    public abstract int calcularDano();
+
+    public void receberDano(int dano){
+        this.pontosVida -= dano;
+        //estava dando erro, coloquei a vida negativa = 0 e se = 0, esta morto.
+        if (this.pontosVida < 0) this.pontosVida = 0;
+    }
+    public String getNome() {
+    return nome;
+    }
+
+    public int getPontosVida() {
+        return pontosVida;
+    }
+
+    public boolean estaVivo() {
+        return pontosVida > 0;
+    }
+
+}
