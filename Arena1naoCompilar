@@ -1,0 +1,70 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+import java.util.Random;
+public class Arena {
+//aqui eu tratei de encapsular, ja que e um conceito presente em poo.
+    private List<Combatente> LadoA;
+    private List<Combatente> LadoB;
+    private Random random = new Random(); 
+    public Arena(){
+        ladoA = new ArrayList<>();
+        ladoB = new ArrayList<>();
+  }
+    public void AdicionarCombatente(Combatente c, char lado){
+        if (lado == 'A') {
+            ladoA.add(c);
+        }else{
+            ladoB.add(c);
+        }
+    }
+    public boolean EquipeViva(List<Combatente> equipe){
+        for (Combatente c : equipe){
+            if (c.estaVivo()) {
+                return true;
+            }
+        }
+    }
+
+    public String ProcessarTurnos(){
+        StringBuilder log = new StringBuilder(); 
+        List<Combatente> todos = new ArrayList<>();
+        todos.addAll(ladoA);
+        todos.addAll(ladoB);    
+
+      //embaralha pra ordem de ataque ser aleatoria
+        Collections.shuffle(todos);
+        for (Combatente atacante : todos){
+            if (!atacante.estaVivo()) continue;
+
+            List<Combatente> inimigos;
+            if (ladoA.contains(atacante)){
+                inimigos = ladoB;
+            }else{
+                inimigos = ladoA;
+            }
+            List<Combatente> alvosVivos = new ArrayList<>();
+            for (Combatente vitima : inimigos){
+                if (vitima.estaVivo()){
+                    alvosVivos.add(vitima);
+                }
+            }
+            if (alvosVivos.size() > 0){
+                Combatente alvo = alvosVivos.get(random.nextInt(alvosVivos.size()));
+                int dano = atacante.calcularAtaque();
+                log.append(atacante.getNome() + "ataca " + alvo.getNome() + "causando " + dano + ".");            
+                alvo.receberDano(dano);
+            }
+        }
+    }
+    public String getResultadoFinal(){
+        if (equipeViva(ladoA)) {
+            return "DOMINIO DA LUZ! O Lado A venceeeu!!!";
+        }else if (equipeViva(ladoB)){
+            return "DOMINIO DA SOMBRA! O Lado B venceeeu!!!";
+        }else{
+            return "EMPATE! Acirrado demaais :)";
+        }
+        }
+}
+
